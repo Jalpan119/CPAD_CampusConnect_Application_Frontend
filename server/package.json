@@ -1,0 +1,24 @@
+{
+  "name": "lmsserver",
+  "version": "1.0.0",
+  "description": "server side app fr\u001b[D\u001b[3~or LMS",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "start-dev": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bufferutil": "^4.0.6",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mysql": "^2.18.1",
+    "socket.io": "^4.5.0",
+    "utf-8-validate": "^5.0.9"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.13"
+  }
+}
