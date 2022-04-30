@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ChatServiceService } from '../chat-service.service';
 
 @Component({
@@ -12,11 +13,22 @@ export class ChatAppPage implements OnInit {
     message: ''
   };
   myId = '12345';
+  toId;
   messages = [];
   alternate = false;
-  constructor(private sockService: ChatServiceService) { }
+  constructor(private sockService: ChatServiceService,
+    private route: ActivatedRoute,) { }
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      this.myId = params['from'];
+      this.toId = params['to'];
+
+      this.sockService.getMessagesBetween(this.myId, this.toId).subscribe((res: any)=>{
+        this.messages = res;
+      });
+
+    });
   }
 
   sendMessage() {
@@ -25,15 +37,17 @@ export class ChatAppPage implements OnInit {
     let d = new Date().toLocaleTimeString().replace(/:\d+ /, ' ');   
 
     this.messages.push({
-      userId: this.alternate ? '12345' : '54321',
-      text: this.data.message,
+      to: this.toId,
+      message: this.data.message,
+      from: this.myId,
       time: d
     });
 
     const msg = {
-      to: 1,
+      to: this.toId,
       message: this.data.message,
-      from: 0
+      from: this.myId,
+      time: d
     }
     this.sockService.sendMessage(msg);
 

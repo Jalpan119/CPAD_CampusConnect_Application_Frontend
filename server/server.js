@@ -31,7 +31,14 @@ con.connect(function (err) {
 });
 count = 0; 
 io.on('connection', (socket) => {
- // console.log('a user connected', socket.id);
+  socket.on('registerChat', (userId) => {
+    users.push({
+      sockId: socket.id,
+      username: userId
+    });
+    console.log("connected users ", users);
+  });
+
   socket.on('chat message', (msg) => {
     console.log('on message', socket.id);
     console.log('message to: ' + msg.to);
@@ -39,9 +46,12 @@ io.on('connection', (socket) => {
     console.log('message from: ' + msg.from);
 
     if(!messageArray[msg.from]){
-      messageArray[msg.from] = [];
+      messageArray[msg.from] = {};
     }
-    messageArray[msg.from].push({
+    if(!messageArray[msg.from][msg.to]) {
+      messageArray[msg.from][msg.to] = [];
+    }
+    messageArray[msg.from][msg.to].push({
       type: 'sent',
       to:  msg.to,
       msg: msg.message
@@ -55,34 +65,57 @@ io.on('connection', (socket) => {
         if(!messageArray[msg.to]){
           messageArray[msg.to] = [];
         }
-        messageArray[msg.to].push({
+        if(!messageArray[msg.to][msg.from]) {
+          messageArray[msg.to][msg.from] = [];
+        }
+        messageArray[msg.to][msg.from].push({
           type: 'received',
           message: msg.message,
           from:  msg.from,
         });
       }
     }
-
-
-
-   // io.emit('chat message', msg);
-  });  
-  users.push({
-    sockId: socket.id,
-    username: socket.username ? socket.username : count,
-    messages: []
-  });
-  count++;
-  console.log("connected users ", users);
+  });    
 });
+
+
+app.post('/allMessages', (req, res) => {
+  const fromId =  req.body.from;
+  const result = messageArray[fromId] ? messageArray[fromId] : [];
+  res.send(JSON.stringify(result)); 
+});
+
+
+app.post('/allMessagesBetween', (req, res) => {
+  const fromId =  req.body.from;
+  const toId = req.body.to;
+  const result = messageArray[fromId] && messageArray[fromId][toId] ? messageArray[fromId][toId] : [];
+  res.send(JSON.stringify(result));  
+})
 
 server.listen(3000, () => {
   console.log('listening on *:3000');
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 app.get('/', (req, res) => {
   res.send('Hello world sample default service path');
 });
+
 
 app.get('/getData', (req, res) => {
   var sql = `SELECT sample_table.Name,sample_table.id FROM sample_schema.sample_table`;
