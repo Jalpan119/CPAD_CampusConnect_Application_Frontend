@@ -21,8 +21,9 @@ export class Tab2Page {
 
   ngOnInit() {
 
-    this.chatService.getStudentData(this.chatService.getUserId()).subscribe(res => {
-      this.payload = res;
+    this.chatService.getFullStudentData(this.chatService.getUserId(), this.chatService.getUserIdentifier()).subscribe((res: any) => {
+      this.payload = res[0];
+      const tags = res[1] && res[1].length>0 ? res[1].map((t) => t.tag) : []; 
       if (this.payload) {
         this.form = this.fb.group({
           emailId: [this.payload.emailId],
@@ -32,6 +33,7 @@ export class Tab2Page {
           university: [this.payload.university, [Validators.required, Validators.pattern(/^[A-Za-z ,'-]+$/i)]],
           subject: [this.payload.subject, [Validators.required, Validators.pattern(/^[A-Za-z ,'-]+$/i)]],
           phoneNumber: [this.payload.phoneNumber, [Validators.required, Validators.pattern(/^[0-9 -+]+$/i)]],
+          tags: [tags && tags.length>0 ? tags.join(',') : '', [Validators.required, Validators.pattern(/^[A-Za-z ,'-]+$/i)]]
         });
         this.form.controls['emailId'].disable();
       }
@@ -46,7 +48,7 @@ export class Tab2Page {
         duration: 2000
       });
       toast.then((toast)=>{toast.present()});
-    });
+    });    
   }
 
   moveToHome() {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ChatServiceService } from '../chat-service.service';
+import { ChatServiceService } from '../../chat-service.service';
 
 @Component({
   selector: 'app-chat-app',
@@ -20,14 +20,18 @@ export class ChatAppPage implements OnInit {
     private route: ActivatedRoute,) { }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-      this.myId = params['from'];
-      this.toId = params['to'];
-
+    this.myId = this.sockService.from;
+    this.toId = this.sockService.to;
+    this.sockService.getMessagesBetween(this.myId, this.toId).subscribe((res: any)=>{
+      this.messages = res;
+      console.log(this.messages);
+    });
+    this.sockService.getPrivateMessage().subscribe(msg=>{
+      console.log('received ', msg);
       this.sockService.getMessagesBetween(this.myId, this.toId).subscribe((res: any)=>{
         this.messages = res;
+        console.log(this.messages);
       });
-
     });
   }
 
@@ -35,14 +39,6 @@ export class ChatAppPage implements OnInit {
     this.alternate = !this.alternate;
 
     let d = new Date().toLocaleTimeString().replace(/:\d+ /, ' ');   
-
-    this.messages.push({
-      to: this.toId,
-      message: this.data.message,
-      from: this.myId,
-      time: d
-    });
-
     const msg = {
       to: this.toId,
       message: this.data.message,
@@ -52,6 +48,12 @@ export class ChatAppPage implements OnInit {
     this.sockService.sendMessage(msg);
 
     delete this.data.message;
+
+    this.sockService.getMessagesBetween(this.myId, this.toId).subscribe((res: any)=>{
+      this.messages = res;
+      console.log(this.messages);
+    });
+
   };
 
 }

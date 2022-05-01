@@ -1,7 +1,8 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Campus Connect
+      <img src="../../assets/Logo.png" width="20rem" height="20rem">
+      CampusConnect
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,18 +10,20 @@
   <ion-grid>
     <ion-row class="ion-justify-content-center">
       <ion-col class="ion-align-self-center" size-md="6">
+        <h1>Welcome to CampusConnect !</h1>
         <p>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+          Our app allows you to connect with other students using our algorithm and help reach out to the people you want depending on your personal needs or purposes. You can use our app to create new connections and expand your network. How and where to meet? Don’t worry we got you covered. We are partnering with local businesses in your school’s area to bring exclusive deals for you to go and enjoy!
         </p>
         <p>
-          Connect using your gmail account
+          Connect using your gmail account          
         </p>
        </ion-col>
     </ion-row>
     <ion-row class="ion-justify-content-center">
       <ion-col class="ion-align-self-center" size-md="3">
-        <ion-button [routerLink]="['/tabs/tab1']" expand="block" color="danger">Sign In</ion-button>
-        <a href="http://localhost:8080/campusConnect/oauth2/authorization/google">Sign In</a>
+        <ion-button href="http://localhost:8080/campusConnect/oauth2/authorization/google" expand="block" color="danger">
+          <ion-icon slot="start" name="logo-google"></ion-icon>
+          Sign In</ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

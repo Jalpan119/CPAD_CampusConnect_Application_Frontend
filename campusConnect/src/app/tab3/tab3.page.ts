@@ -10,35 +10,29 @@ import { ChatServiceService } from '../chat-service.service';
 export class Tab3Page {
 
   messages;
+  messageHeaders;
   constructor(private sockService: ChatServiceService,
     private route: ActivatedRoute,
     private router: Router) {}
   
   ngOnInit(){
-    // const msg = {
-    //   to: 1,
-    //   msg: 'hello',
-    //   from: 0
-    // };
-    // this.sockService.sendMessage(msg);
-    // this.sockService.getMessage().subscribe(res=>{
-    //   console.log('received message ', res);
-    // });
-    // this.sockService.getPrivateMessage().subscribe(res=>{
-    //   console.log('received message ', res);
-    // });
+  }
+
+  ionViewWillEnter() {
     this.getAllMessages();
   }
 
   getAllMessages() {
     this.sockService.getAllMessages(this.sockService.getUserId()).subscribe(res=>{
       this.messages = res;
+      this.messageHeaders = Object.keys(res);
       console.log(this.messages);
     });
   }
 
   goToChat(id) {
-    this.router.navigate(['/chat', {from: this.sockService.getUserId(), to: id}]);
+    this.sockService.setUpChat(this.sockService.getUserId(), id);
+    this.router.navigate(['tabs/tab3/chat']);
   }
 
 }

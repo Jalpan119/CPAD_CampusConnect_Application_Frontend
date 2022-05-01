@@ -11,10 +11,6 @@ const routes: Routes = [
     loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
   },
   {
-    path: 'chat',
-    loadChildren: () => import('./chat-app/chat-app.module').then( m => m.ChatAppPageModule)
-  },
-  {
     path: 'callcampusConnect/login/oauth2/code/googleback',
     loadChildren: () => import('./callback/callback.module').then( m => m.CallbackPageModule)
   }

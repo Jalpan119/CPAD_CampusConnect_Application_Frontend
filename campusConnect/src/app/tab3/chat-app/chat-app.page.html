@@ -7,10 +7,10 @@
 
 <ion-content class="content-stable">
 
-  <div *ngFor="let message of messages" [ngClass]="{other: message?.userId !== myId}" class="messages">
+  <div *ngFor="let message of messages" [ngClass]="{other: message?.type === 'received'}" class="messages">
 
     <div class="message" [ngClass]="{'slide-right': hideTime, '': !hideTime}">
-      <span>{{ message?.text }}</span>
+      <span>{{ message?.message }}</span>
     </div>
 
     <div class="time" [ngClass]="{'slide-right': hideTime, '': !hideTime}">{{message?.time}}</div>

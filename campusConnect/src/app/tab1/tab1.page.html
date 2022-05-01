@@ -1,9 +1,16 @@
 <ion-header [translucent]="true">
+  
   <ion-toolbar>
-    <ion-title>
-      Campus connect
-    </ion-title>
-  </ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button auto-hide="false"></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="primary">
+      <ion-button href="http://localhost:8080/campusConnect/logout">
+        <ion-icon slot="icon-only" ios="log-out-outline" md="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Campus Connect</ion-title>
+  </ion-toolbar>  
 </ion-header>
 
 <ion-content [fullscreen]="true">
@@ -16,14 +23,15 @@
   <ion-content class="ion-padding">
     <ion-grid>
       <ion-row class="ion-align-items-start">
-        <ion-col size-md="1">
-          <img src="../../assets/blank-profile-picture.jpg" alt="profile image" class="profile-image" />
+        <ion-col size-lg="1" size-md="3" size-sm="3">
+          <img [src]="picture ? picture : '../../assets/blank-profile-picture.jpg'" alt="profile image" class="profile-image" />
         </ion-col>
-        <ion-col size-md="6">
-          <h3>Priyanka</h3>
+        <ion-col size-md="6" size-sm="4">
+          <h3 *ngIf="payload?.firstName">{{payload?.firstName}} {{payload?.lastName}}</h3>
+          <h3 *ngIf="!payload?.firstName">Welcome new user</h3>
         </ion-col>
         <ion-col size="1" push-md="4">
-          <ion-icon name="settings-sharp" class="settings-icon"></ion-icon>
+          <ion-icon name="settings-sharp" class="settings-icon" (click)="goToProfile()"></ion-icon>                   
         </ion-col>
       </ion-row>
       <ion-row class="ion-align-items-center">

@@ -21,10 +21,24 @@ app.use(express.urlencoded({ extended: true })) // for parsing application/x-www
 count = 0; 
 io.on('connection', (socket) => {
   socket.on('registerChat', (userId) => {
-    users.push({
-      sockId: socket.id,
-      username: userId
+    let found = -1;
+    users.forEach((ele, index)=>{
+      if(ele.username === userId) {
+        found = index;
+      }
     });
+    if(found === -1){
+      users.push({
+        sockId: socket.id,
+        username: userId
+      });
+    } else {
+      users[found] = {
+        sockId: socket.id,
+        username: userId
+      }
+    }
+    
     console.log("connected users ", users);
   });
 
@@ -43,7 +57,8 @@ io.on('connection', (socket) => {
     messageArray[msg.from][msg.to].push({
       type: 'sent',
       to:  msg.to,
-      msg: msg.message
+      message: msg.message,
+      time: msg.time
     });
     for (let i=0; i<users.length; i++) {
       if(msg.to === users[i].username) {
@@ -52,7 +67,7 @@ io.on('connection', (socket) => {
           from:  msg.from,
         });
         if(!messageArray[msg.to]){
-          messageArray[msg.to] = [];
+          messageArray[msg.to] = {};
         }
         if(!messageArray[msg.to][msg.from]) {
           messageArray[msg.to][msg.from] = [];
@@ -61,7 +76,8 @@ io.on('connection', (socket) => {
           type: 'received',
           message: msg.message,
           from:  msg.from,
-        });
+          time: msg.time
+        });        
       }
     }
   });    
@@ -70,8 +86,11 @@ io.on('connection', (socket) => {
 
 app.post('/allMessages', (req, res) => {
   const fromId =  req.body.from;
-  const result = messageArray[fromId] ? messageArray[fromId] : [];
-  res.send(JSON.stringify(result)); 
+  console.log("from ", fromId);
+  let result = messageArray[fromId] ? messageArray[fromId] : [];
+  console.log('messages ', messageArray);
+  console.log('result ', result);
+  res.send(JSON.stringify(messageArray[fromId])); 
 });
 
 

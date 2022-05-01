@@ -11,21 +11,37 @@ export class Tab1Page implements OnInit {
 
   searchField = '';
   searchResults = [];
+  payload;
+  picture;
   constructor(private sockService: ChatServiceService,
     private route: ActivatedRoute,
     private router: Router) {}
 
-  ngOnInit(){
-    const id = this.route.snapshot.paramMap.get('id');
-    console.log('id: ', id);
-    if(id && !this.sockService.getUserId()) {
-      this.sockService.setUserId(id);
-      this.sockService.registerChat(id);
-    }    
+  ngOnInit(){    
+    this.sockService.getInitialUserData().subscribe((res: any) => {
+      this.payload = res;
+      this.sockService.setUserId(this.payload.email);
+      this.sockService.getStudentData(this.payload.email).subscribe((res1: any)=>{
+        this.sockService.setUserIdentifier(res1.userId);
+        this.sockService.registerChat(this.payload.email);
+        this.sockService.setPictureUrl(this.payload.pictureUrl);
+        this.picture = this.payload.pictureUrl;
+      });
+    }, (err)=>{
+      this.router.navigate(['/login']);
+     });  
+  }
+
+  ionViewWillEnter() {
+    this.picture = this.sockService.pictureUrl;
   }
 
   selectPerson() {
 
+  }
+
+  goToProfile() {
+    this.router.navigate(['/tabs/tab2']);
   }
 
   search() {
@@ -35,7 +51,8 @@ export class Tab1Page implements OnInit {
   }
 
   startChat(id) {
-    this.router.navigate(['/chat', {from: this.sockService.getUserId(), to: id}]);
+    this.sockService.setUpChat(this.sockService.getUserId(), id);
+    this.router.navigate(['tabs/tab3/chat']);
   }
 
 }
