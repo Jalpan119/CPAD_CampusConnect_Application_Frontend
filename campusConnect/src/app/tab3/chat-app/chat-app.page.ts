@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ChatServiceService } from '../../chat-service.service';
 
 @Component({
@@ -17,15 +17,9 @@ export class ChatAppPage implements OnInit {
   messages = [];
   alternate = false;
   constructor(private sockService: ChatServiceService,
-    private route: ActivatedRoute,) { }
+    private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
-    this.myId = this.sockService.from;
-    this.toId = this.sockService.to;
-    this.sockService.getMessagesBetween(this.myId, this.toId).subscribe((res: any)=>{
-      this.messages = res;
-      console.log(this.messages);
-    });
     this.sockService.getPrivateMessage().subscribe(msg=>{
       console.log('received ', msg);
       this.sockService.getMessagesBetween(this.myId, this.toId).subscribe((res: any)=>{
@@ -33,6 +27,18 @@ export class ChatAppPage implements OnInit {
         console.log(this.messages);
       });
     });
+  }
+
+  ionViewWillEnter() {
+    this.myId = this.sockService.from;
+    this.toId = this.sockService.to;
+    this.sockService.getMessagesBetween(this.myId, this.toId).subscribe((res: any)=>{
+      this.messages = res;
+      console.log(this.messages);
+    });
+    if(!this.sockService.getUserId()) {
+      this.router.navigate(['/tabs/tab1/']);
+    }
   }
 
   sendMessage() {

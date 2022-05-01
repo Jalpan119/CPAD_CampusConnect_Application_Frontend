@@ -88,6 +88,10 @@ export class ChatServiceService {
     return forkJoin([service1, service2]);
   }
 
+  getTags(id) {
+    return this.http.get(`${this.webServiceUrl}/getTagsOfStudent/${id}`, {withCredentials: true});
+  }
+
   getStudentData(id) {
     return this.http.get(`${this.webServiceUrl}/getStudent?emailId=${id}`, {withCredentials: true});
   }

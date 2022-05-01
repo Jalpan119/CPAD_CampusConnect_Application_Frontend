@@ -21,6 +21,13 @@ export class Tab2Page {
 
   ngOnInit() {
 
+
+  }
+
+  ionViewWillEnter() { 
+    if(!this.chatService.getUserId()) {
+      this.router.navigate(['/tabs/tab1/']);
+    }
     this.chatService.getFullStudentData(this.chatService.getUserId(), this.chatService.getUserIdentifier()).subscribe((res: any) => {
       this.payload = res[0];
       const tags = res[1] && res[1].length>0 ? res[1].map((t) => t.tag) : []; 
@@ -38,7 +45,6 @@ export class Tab2Page {
         this.form.controls['emailId'].disable();
       }
     });
-
   }
 
   saveData() {
@@ -52,7 +58,7 @@ export class Tab2Page {
   }
 
   moveToHome() {
-    this.router.navigate['/tabs/tab1/0']
+    this.router.navigate(['/tabs/tab1/']);
   }
 
 }

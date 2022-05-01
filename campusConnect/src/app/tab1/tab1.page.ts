@@ -13,6 +13,7 @@ export class Tab1Page implements OnInit {
   searchResults = [];
   payload;
   picture;
+  tags;
   constructor(private sockService: ChatServiceService,
     private route: ActivatedRoute,
     private router: Router) {}
@@ -26,6 +27,7 @@ export class Tab1Page implements OnInit {
         this.sockService.registerChat(this.payload.email);
         this.sockService.setPictureUrl(this.payload.pictureUrl);
         this.picture = this.payload.pictureUrl;
+        this.payload = res1;        
       });
     }, (err)=>{
       this.router.navigate(['/login']);
@@ -34,6 +36,21 @@ export class Tab1Page implements OnInit {
 
   ionViewWillEnter() {
     this.picture = this.sockService.pictureUrl;
+    if(!this.sockService.getUserId()) {
+      this.sockService.getInitialUserData().subscribe((res: any) => {
+        this.payload = res;
+        this.sockService.setUserId(this.payload.email);
+        this.sockService.getStudentData(this.payload.email).subscribe((res1: any)=>{
+          this.sockService.setUserIdentifier(res1.userId);
+          this.sockService.registerChat(this.payload.email);
+          this.sockService.setPictureUrl(this.payload.pictureUrl);
+          this.picture = this.payload.pictureUrl;
+          this.payload = res1;
+        });
+      }, (err)=>{
+        this.router.navigate(['/login']);
+       }); 
+    }
   }
 
   selectPerson() {

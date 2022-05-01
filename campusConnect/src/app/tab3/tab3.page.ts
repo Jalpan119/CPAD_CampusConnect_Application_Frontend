@@ -19,6 +19,9 @@ export class Tab3Page {
   }
 
   ionViewWillEnter() {
+    if(!this.sockService.getUserId()) {
+      this.router.navigate(['/tabs/tab1/']);
+    }
     this.getAllMessages();
   }
 

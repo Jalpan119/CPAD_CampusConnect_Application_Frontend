@@ -9,7 +9,7 @@
         <ion-icon slot="icon-only" ios="log-out-outline" md="log-out-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Campus Connect</ion-title>
+    <ion-title>CampusConnect</ion-title>
   </ion-toolbar>  
 </ion-header>
 
@@ -22,15 +22,15 @@
 
   <ion-content class="ion-padding">
     <ion-grid>
-      <ion-row class="ion-align-items-start">
-        <ion-col size-lg="1" size-md="3" size-sm="3">
+      <ion-row class="ion-align-items-center">
+        <ion-col size-lg="1" size-md="2" size-sm="2">
           <img [src]="picture ? picture : '../../assets/blank-profile-picture.jpg'" alt="profile image" class="profile-image" />
         </ion-col>
-        <ion-col size-md="6" size-sm="4">
+        <ion-col size-md="6" size-sm="6">
           <h3 *ngIf="payload?.firstName">{{payload?.firstName}} {{payload?.lastName}}</h3>
           <h3 *ngIf="!payload?.firstName">Welcome new user</h3>
         </ion-col>
-        <ion-col size="1" push-md="4">
+        <ion-col>
           <ion-icon name="settings-sharp" class="settings-icon" (click)="goToProfile()"></ion-icon>                   
         </ion-col>
       </ion-row>
@@ -49,13 +49,14 @@
       <ion-row class="ion-align-items-center">
         <ion-list>
           <ion-list-header> Search results </ion-list-header>  
+          <section *ngIf="!searchResults || searchResults.length===0"><ion-item><p>No results</p></ion-item></section>
           <ion-item *ngFor="let person of searchResults">
             <ion-label>
               <h2>{{person?.firstName}} {{person?.lastName}}</h2>
               <h3>{{person?.emailId}}</h3>
-              <p>{{person?.degree}} {{person?.subject}}</p>
+              <p>{{person?.degree}}, {{person?.subject}}</p>
             </ion-label>
-            <ion-button color="primary" (click)="startChat(person?.emailId)">Chat</ion-button>
+            <ion-button color="primary" (click)="startChat(person?.emailId)" class="margin-left">Chat</ion-button>
           </ion-item>  
         </ion-list>  
     </ion-row>
