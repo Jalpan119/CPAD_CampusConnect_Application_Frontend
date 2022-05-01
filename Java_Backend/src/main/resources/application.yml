@@ -1,0 +1,28 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 208878542257-8qdeuo718cniukckegvidlio5hh6strt.apps.googleusercontent.com
+            clientSecret: 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
+            scope:
+              - email
+              - profile
+  datasource:
+    url: jdbc:mysql://localhost:3306/campusconnect_sql
+    username: root
+    password: 13icuos@051
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  data:
+    rest:
+      basePath: /login/oauth2/code/google
+server:
+  servlet:
+    context-path: /campusConnect
